@@ -31,19 +31,22 @@ The dataset contains patient demographics, utilization history, diagnoses, and h
 ---
 
 ## Project Structure
+
+```text
 hospital-readmission-prediction/
 ├── data/
-│ ├── raw/ # Original dataset
-│ └── processed/ # Cleaned dataset used for modeling
+│   ├── raw/            # Original dataset
+│   └── processed/      # Cleaned dataset used for modeling
 ├── notebooks/
-│ ├── 01_data_cleaning.ipynb
-│ ├── 02_eda.ipynb
-│ └── 03_modeling.ipynb
+│   ├── 01_data_cleaning.ipynb
+│   ├── 02_eda.ipynb
+│   └── 03_modeling.ipynb
 ├── reports/
-│ └── figures/
+│   └── figures/
 ├── README.md
 ├── requirements.txt
 └── .gitignore
+
 
 
 ---
