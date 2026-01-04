@@ -1,24 +1,40 @@
 # Hospital Readmission Risk Prediction
 
 ## Overview
-This project uses machine learning to predict 30-day hospital readmissions using the Diabetes 130-US Hospitals dataset (1999–2008).  
-The goal is to identify patients at high risk of readmission so that healthcare providers can intervene earlier.
+This project applies machine learning to predict whether a patient will be readmitted to the hospital within 30 days of discharge.  
+Thirty-day readmissions are a key healthcare quality metric and are associated with increased costs and reimbursement penalties.
+
+The goal of this project is to build and evaluate predictive models that can support **risk stratification** and **post-discharge intervention planning**.
+
+---
 
 ## Business Problem
-Hospital readmissions are costly and are used as a quality metric by insurers and regulators.  
-Accurately identifying high-risk patients can help reduce avoidable readmissions and improve patient outcomes.
+Hospital readmissions are costly and often preventable. Identifying patients at high risk of readmission enables healthcare providers and payers to:
+- Prioritize follow-up care
+- Allocate care management resources
+- Reduce avoidable readmissions and associated penalties
+
+This project frames readmission prediction as a **binary classification problem** focused on clinical usefulness rather than pure accuracy.
+
+---
 
 ## Dataset
-- Source: UCI Machine Learning Repository
-- Dataset: Diabetes 130-US Hospitals for Years 1999–2008
-- Records: ~100,000 hospital encounters
-- Target variable: `readmitted` (converted to binary: readmitted within 30 days vs not)
+- **Source:** UCI Machine Learning Repository  
+- **Dataset:** Diabetes 130-US Hospitals for Years 1999–2008  
+- **Records:** ~100,000 inpatient encounters  
+- **Target Variable:** 30-day readmission (`readmitted_binary`)
+  - `1` = readmitted within 30 days  
+  - `0` = not readmitted within 30 days  
+
+The dataset contains patient demographics, utilization history, diagnoses, and hospital encounter information.
+
+---
 
 ## Project Structure
 hospital-readmission-prediction/
 ├── data/
 │ ├── raw/ # Original dataset
-│ └── processed/ # Cleaned dataset
+│ └── processed/ # Cleaned dataset used for modeling
 ├── notebooks/
 │ ├── 01_data_cleaning.ipynb
 │ ├── 02_eda.ipynb
@@ -29,24 +45,85 @@ hospital-readmission-prediction/
 ├── requirements.txt
 └── .gitignore
 
-## Approach
-1. Data cleaning and preprocessing
-2. Exploratory data analysis (EDA)
-3. Feature engineering
-4. Model training and comparison
-5. Evaluation using recall, ROC-AUC, and confusion matrices
 
-## Models Used
-- Logistic Regression
-- Random Forest Classifier
+---
 
-## Key Considerations
-- Class imbalance in readmission outcomes
-- Emphasis on recall to reduce false negatives
-- Model interpretability and ethical use in healthcare
+## Exploratory Data Analysis (EDA)
+Key findings from exploratory analysis include:
+- Readmission rates vary across age groups but show no single dominant demographic driver.
+- Prior inpatient utilization and clinical complexity are strongly associated with readmission risk.
+- Length of stay alone is a weak predictor but contributes signal when combined with other features.
 
-## Next Steps
-- Hyperparameter tuning
-- Additional feature engineering
-- Model explainability (SHAP)
-- Deployment as a simple risk-scoring tool
+These findings reinforce that readmission risk is **multifactorial** rather than driven by a single variable.
+
+---
+
+## Modeling Approach
+Two supervised classification models were evaluated:
+
+- **Logistic Regression**
+  - Used as an interpretable baseline model
+  - Class weighting applied to address outcome imbalance
+
+- **Random Forest Classifier**
+  - Used to capture nonlinear relationships and feature interactions
+  - Provided modest improvement in predictive performance
+
+### Preprocessing
+- Categorical features were one-hot encoded
+- Numeric features were passed through without scaling
+- Train/test split preserved class imbalance via stratification
+
+---
+
+## Model Evaluation
+Models were evaluated using:
+- **Recall (Sensitivity)** for 30-day readmission
+- **ROC-AUC** for overall discrimination
+- **Precision** to assess false-positive tradeoffs
+
+Accuracy was not emphasized due to class imbalance.
+
+### Results Summary
+- Logistic Regression achieved an ROC-AUC of approximately **0.64**
+- Random Forest achieved an ROC-AUC of approximately **0.66**
+- Both models demonstrated modest but meaningful predictive signal, which is typical for readmission prediction using administrative data
+
+---
+
+## Feature Insights
+Feature importance analysis from the Random Forest model indicated that readmission risk is primarily driven by:
+- Prior inpatient utilization
+- Number of diagnoses (clinical complexity)
+- Length of hospital stay
+- Patterns of healthcare usage rather than isolated demographic factors
+
+These findings align with clinical expectations and support the use of the model as a **risk stratification tool**.
+
+---
+
+## Practical Implications
+In a real healthcare setting, this model could be used to:
+- Flag high-risk patients at discharge
+- Prioritize care coordination or follow-up outreach
+- Support population health and utilization management efforts
+
+The model is intended to **support decision-making**, not replace clinical judgment.
+
+---
+
+## Limitations & Next Steps
+- The dataset does not include social determinants of health or post-discharge behavior.
+- Feature scaling and hyperparameter tuning may improve performance.
+- Model explainability techniques (e.g., SHAP values) would be required prior to deployment.
+
+---
+
+## Technologies Used
+- Python
+- Pandas, NumPy
+- Scikit-learn
+- Matplotlib, Seaborn
+- Jupyter Notebooks
+- Git & GitHub
+
